@@ -1,15 +1,42 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
-  img(src="images/beach.jpg")
+  div(class="header")
+    img(src="images/logo.png")
+    p 
+      a(href="" class= "button") Sign Up
+      a(href="" class= "button") Log In
+
+  div(class="search")
+    form(action="")
+      p Destination
+        input(type="text", value="Airport/City")
+      p Duration (nights)
+        input(type="number", value="1")
+      p Depature Date
+        input(type="date", value="dd/mm/yyyy")
+      p Number of Guests
+        input(type="number", value="1")
+      select(name="stars" id="stars")
+        option(value="Min 1 Star") Min 1 Star 
+        option(value="Min 2 stars" ) Min 2 stars
+        option(value="Min 3 Stars" ) Min 3 Stars
+        option(value="Min 4 Stars" ) Min 4 Stars
+        option(value="Min 5 Stars" ) Min 5 Stars
+      select(name="Price" id="Price")
+        option(value="Price: Low-High") Price: Low-High 
+        option(value="Price: High-Low" ) Price: High-Low
+        option(value="Most Popular" ) Most Popular
+        option(value="" ) 
+        option(value="" ) 
+      input(type="button", value="SEARCH")
+    img(src="images/beach.jpg")
 
  
-  - const foods =["cheese", "eggs" , "chicken"]
-  div
-    h1=name
-    a(href="https://www.google.com" class= "button") Link to GOOGLE
-    ul
-      each food in foods
-       li = 'i love' + food
+  //- - const foods =["cheese", "eggs" , "chicken"]
+  //- div
+  //-   h1=name
+  //-   a(href="https://www.google.com" class= "button") Link to GOOGLE
+  //-   ul
+  //-     each food in foods
+  //-      li = 'i love' + food
