@@ -10,7 +10,16 @@ exports.listAllHotels = async (req, res,next) => {
     const allHotels = await Hotel.find({ available:{ $eq: true }});
     res.render('all_hotels', { title: "All Hotels",allHotels });
     // res.json(allHotels);
-  } catch (errors){
+  } catch (error){
+    next(error)
+  }
+}
+
+exports.listAllCountries = async (req,res,next) =>{
+  try {
+    const allCountries = await Hotel.distinct('country');
+    res.render('all_countries', {title: 'Browse by country', allCountries});
+  }catch (error) {
     next(error)
   }
 }
