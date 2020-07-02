@@ -1,3 +1,10 @@
 extends layout
+include mixins/_hotel
 
 block content
+
+  .outer_wrapper
+    .hotel_wrapper
+      h2 Hotels
+        a(href="/all") (See All):
+      +hotel
