@@ -8,5 +8,8 @@ router.get('/', hotelController.homePage);
 
 router.get('/all', hotelController.listAllHotels);
 
+//Admit Routers:
+router.get('/admin', hotelController.adminPage);
+router.get('/admin/add', hotelController.createHotelGet);
 
 module.exports = router;
