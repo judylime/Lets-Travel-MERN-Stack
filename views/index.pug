@@ -4,3 +4,12 @@ block content
   h1= title
   p Welcome to #{title}
   img(src="images/beach.jpg")
+
+ 
+  - const foods =["cheese", "eggs" , "chicken"]
+  div
+    h1=name
+    a(href="https://www.google.com" class= "button") Link to GOOGLE
+    ul
+      each food in foods
+       li = "i love" + food
