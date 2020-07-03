@@ -42,7 +42,14 @@ if (!errors.isEmpty()) {
   return;
 } else {
   // No error
+    const newUser = new User(req.body);
+    User.register(newUser, req.body.password, function(err) {
 
+    if (err) {
+      console.log('error while user register!', err);
+      return next(err);
+    }
+    next();
   });
 }
 }
