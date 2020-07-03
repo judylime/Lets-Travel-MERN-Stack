@@ -1,6 +1,7 @@
 const Hotel = require('../models/hotel');
 const cloudinary = require('cloudinary');
 const multer  = require('multer');
+const { search } = require('../app');
 
 cloudinary.config({ 
   cloud_name: process.env.CLOUDINARY_NAME, 
@@ -176,6 +177,26 @@ exports.hotelsByCountry = async (req, res,next ) => {
     const countryList = await Hotel.find( {country: countryParam} );
     res.render('hotels_by_country', { title: `Browse by country: ${countryParam}`, countryList });
   } catch(error) {
+    next(error)
+  }
+}
+
+exports.searchResults = async(req, res,next) => {
+  try{
+    const searchQuery = req.body; 
+    const parsedStars = parseInt(searchQuery.stars) || 1
+    const parsedSort = parseInt(searchQuery.sort) || 1
+    const searchData = await Hotel.aggregate([
+      { $match: { $text: { $search: `\"${searchQuery.destination}\"` } } },
+      { $match: { available: true, 
+                  star_rating: { $gte: parsedStars } 
+                }},
+      { $sort: { cost_per_night: parsedSort }}
+    ]);
+    // res.json(searchData)
+    // res.send(typeof searchQuery.stars);
+    res.render('search_results', { title: "Search results", searchQuery, searchData });
+  } catch (error) {
     next(error)
   }
 }
