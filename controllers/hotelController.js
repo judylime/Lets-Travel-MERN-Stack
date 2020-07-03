@@ -8,11 +8,29 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET 
 });
 
-const storage=multer.discStorage({});
+const storage=multer.diskStorage({});
 
 const upload = multer({storage});
 
 exports.upload = upload.single('image');
+
+exports.pushToCloudinary = (req, res, next) => {
+  if(req.file) {
+  cloudinary.uploader.upload(req.file.path)
+  .then((result)=> {
+    req.body.image = result.public_id;
+    next(); 
+  })
+  .catch(() => {
+    req.flash('error', 'Sorry there was a problem uploading your image, please try again...');
+    res.redirect('/admin/add');
+  })
+  } else {
+    next(); 
+  }
+};
+
+
 // const { NotExtended } = require('http-errors');
 
 // exports.homePage = (req, res) => {

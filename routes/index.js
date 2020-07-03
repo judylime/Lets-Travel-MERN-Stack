@@ -18,6 +18,7 @@ router.get('/admin', hotelController.adminPage);
 router.get('/admin/add', hotelController.createHotelGet);
 router.post('/admin/add', 
   hotelController.upload,
+  hotelController.pushToCloudinary, 
   hotelController.createHotelPost);
 router.get('/admin/edit-remove',hotelController.editRemoveGet);
 router.post('/admin/edit-remove',hotelController.editRemovePost);
