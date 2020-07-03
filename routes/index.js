@@ -3,11 +3,13 @@ var router = express.Router();
 
 //require controllers:
 const hotelController = require ('../controllers/hotelController');
+const hotel = require('../models/hotel');
 
 /* GET home page. */
 router.get('/', hotelController.homePageFilters);
 
 router.get('/all', hotelController.listAllHotels);
+router.get('/all/:hotel', hotelController.hotelDetail);
 router.get('/countries', hotelController.listAllCountries);
 
 //Admit Routers:
