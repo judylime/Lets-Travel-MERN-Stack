@@ -53,7 +53,36 @@ exports.createHotelPost = async (req,res,next) => {
     const hotel = new Hotel(req.body);
     await hotel.save();
     res.redirect(`/all/${hotel._id}`);
-  } catch (error){
+  } catch (errors){
     next(error)
   }
 }
+
+exports.editRemoveGet = ( req,res) =>{
+  res.render('edit_remove', {title:'Search for hotel to edit or remove'})
+}
+
+exports.editRemovePost = async (req, res, next) =>{
+  try{
+    const hotelId = req.body.hotel_id || null;
+    const hotelName = req.body.hotel_name || null;
+    
+    const hotelData = await Hotel.find({$or: [
+      { _id: hotelid },
+      { hotel_name: hotelName}
+    ]}).collation({
+      locale:'en',
+      strength: 2
+    });
+
+    if(hotelData.length >0) {
+      res.render('hotel_detail', {title:'Add / Remove Hotel', hotelData});
+      return
+    } else [
+      res.redirect('/admin/edit-remove')
+    ]
+  }catch(errors){
+    next(error)
+  }
+}
+
