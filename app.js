@@ -1,13 +1,13 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+require('dotenv').config();
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
 const mongoose = require('mongoose');
+const index = require('./routes/index');
 
-var indexRouter = require('./routes/index');
-
-var app = express();
+const app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -18,7 +18,7 @@ app.use( (req,res,next) => {
   next();
 });
 //Set up mongoose connection
-mongoose.connect('mongodb://lets_travel_admin:123123123@cluster0-shard-00-00.ifcjy.mongodb.net:27017,cluster0-shard-00-01.ifcjy.mongodb.net:27017,cluster0-shard-00-02.ifcjy.mongodb.net:27017/<dbname>?ssl=true&replicaSet=atlas-42a2bz-shard-0&authSource=admin&retryWrites=true&w=majority')
+mongoose.connect(process.env.DB);
 mongoose.Promise = global.Promise;
 mongoose.connection.on('error', (error)=> console.error(error.message));
 
