@@ -1,9 +1,9 @@
 const Hotel = require('../models/hotel');
-const { NotExtended } = require('http-errors');
+// const { NotExtended } = require('http-errors');
 
-exports.homePage = (req, res) => {
-  res.render('index', { title: "Let's Travel" });
-}
+// exports.homePage = (req, res) => {
+//   res.render('index', { title: "Let's Travel" });
+// }
 
 exports.listAllHotels = async (req, res,next) => {
   try{
@@ -23,6 +23,22 @@ exports.listAllCountries = async (req,res,next) =>{
     next(error)
   }
 }
+
+exports.homePageFilters = async (req,res,next) =>{
+  try{
+    const hotels =await Hotel.aggregate([
+      {$match:{ available:true}},
+      {$sample:{ size:9 }}
+    ]);
+    const countries = Hotel.aggregate([
+      { $group: {_id: '$country'}},
+      { $sample: { size: 9 }}
+    ]);
+    res.render('index', { countries, hotels});
+  } catch(error) {
+    next(error)
+  }
+} 
 
 exports.adminPage = (req,res)=>{
   res.render('admin',{titile:"Admin"});
