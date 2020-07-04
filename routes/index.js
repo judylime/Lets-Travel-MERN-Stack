@@ -52,7 +52,8 @@ router.post('/sign-up',
 router.get('/login', userController.loginGet);
 router.post('/login', userController.loginPost);
 
-// router.get('/logout', userController.logout);
+router.get('/logout', userController.logout);
+router.get('/confirmation/:data', userController.bookingConfirmation);
 
 // router.get('/my-account', asyncErrorHandler(userController.myAccount));
 

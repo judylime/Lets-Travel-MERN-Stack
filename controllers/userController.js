@@ -1,9 +1,11 @@
 const User = require('../models/user');
+const Hotel = require('../models/hotel');
 const Passport = require('passport');
 
 //Express validator
 const {check, validationResult} =require ('express-validator/check');
 const {sanitize} = require('expresss-validator/filter');
+const querystring = require('querystring');
 
 exports.signUpGet = (req, res) => {
   res.render('sign_up', {title:'User sign up'});
@@ -78,6 +80,20 @@ exports.logout = (req, res) => {
   req.flash('info', 'You are now logged out');
   res.redirect('/');
 };
+
+exports.bookingConfirmation = async (req, res) => {
+  try{
+    const data = req.params.data;
+    // res.json(data);
+    const searchData = querystring.parse(data);
+        // res.json(searchData);
+    const hotel = await Hotel.find( {_id: searchData.id} );
+    res.render('confirmation', { title: 'Confirm your booking', hotel, searchData});
+
+  }catch (error) {
+    next(error)
+  }
+}
 
 exports.isAdmin = (req, res, next) => {
   if(req.isAuthenticated() && req.user.isAdmin) {
