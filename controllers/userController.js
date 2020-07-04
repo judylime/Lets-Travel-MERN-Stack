@@ -1,7 +1,7 @@
 const User = require('../models/user');
 const Hotel = require('../models/hotel');
+const Order = require('../models/order');
 const Passport = require('passport');
-
 //Express validator
 const {check, validationResult} =require ('express-validator/check');
 const {sanitize} = require('expresss-validator/filter');
@@ -92,6 +92,26 @@ exports.bookingConfirmation = async (req, res) => {
 
   }catch (error) {
     next(error)
+  }
+}
+
+exports.orderPlaced = async (req, res,next) => { 
+  try{
+    const data = req.params.data;
+    const parsedData = querystring.parse(data);
+    const order = new Order({
+      user_id: req.user._id,
+      hotel_id: parsedData.id,
+      order_details: { 
+        duration: parsedData.duration, 
+        dateOfDeparture: parsedData.dateOfDeparture, 
+        numberOfGuests: parsedData.numberOfGuests }
+    });
+    await order.save();
+    req.flash('info', 'Thank you, your order has been placed!');
+    res.redirect('/my-account');
+  }catch(error) {
+    next(error);
   }
 }
 

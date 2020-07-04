@@ -51,9 +51,7 @@ mixin hotel(hotel, searchQuery)
         - const query = `id=${hotel._id}&duration=${searchQuery.duration}&dateOfDeparture=${searchQuery.dateOfDeparture}&numberOfGuests=${searchQuery.numberOfGuests}`;
         if url === '/results'
           a.button(href=`/confirmation/${query}`) Continue
-
         else if url.startsWith('/confirmation/')
-        
           if user
             a.button(href=`/order-placed/${query}`) Place your order!
           else 

@@ -57,9 +57,8 @@ router.get('/confirmation/:data', userController.bookingConfirmation);
 
 // router.get('/my-account', asyncErrorHandler(userController.myAccount));
 
-// router.get('/order-placed/:data', asyncErrorHandler(
-//   userController.orderPlaced )
-// );
+router.get('/order-placed/:data', userController.orderPlaced );
+
 
 
 
