@@ -1,5 +1,5 @@
 const User = require('../models/user');
-
+const Passport = require('passport');
 
 //Express validator
 const {check, validationResult} =require ('express-validator/check');
@@ -46,15 +46,27 @@ if (!errors.isEmpty()) {
   // No error
 
     const newUser = new User(req.body);
-    
+
     User.register(newUser, req.body.password, function(err) {
 
     if (err) {
       console.log('error while user register!', err);
       return next(err);
     }
-    next();
+    next();//Move onto loginPost after registering
   });
 }
 }
 ];
+
+exports.loginGet = (req, res) => {
+  res.render('login', {title: 'Login to continue'} );
+};
+
+exports.loginPost = Passport.authenticate('local', {
+  successRedirect: '/',
+  successFlash: 'You are now logged in!',
+  failureRedirect: '/login',
+  failureFlash: 'Login failed, please try again'
+});
+
