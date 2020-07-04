@@ -6,16 +6,16 @@ const hotelController = require ('../controllers/hotelController');
 const hotel = require('../models/hotel');
 
 /* GET home page. */
-// router.get('/', hotelController.homePageFilters);
-router.get('/', function(req,res){
-  if(req.session.page_views){
-    req.session.page_views++;
-    res.send(`Number of page visits: ${req.session.page_views}`)
-  } else {
-    req.session.page_views = 1;
-    res.send('First visit');
-  }
-})
+router.get('/', hotelController.homePageFilters);
+// router.get('/', function(req,res){
+//   if(req.session.page_views){
+//     req.session.page_views++;
+//     res.send(`Number of page visits: ${req.session.page_views}`)
+//   } else {
+//     req.session.page_views = 1;
+//     res.send('First visit');
+//   }
+// })
 
 router.get('/all', hotelController.listAllHotels);
 router.get('/all/:hotel', hotelController.hotelDetail);
