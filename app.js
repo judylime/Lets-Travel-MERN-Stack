@@ -5,7 +5,12 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const mongoose = require('mongoose');
+
 const indexRouter = require('./routes/index');
+
+// For sessions
+const session = require('express-session');
+const MongoStore = require('connect-mongo')(session);
 
 //For passport.js:
 const User = require('./models/user');
@@ -17,6 +22,12 @@ const app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
+app.use(session({
+  secret: process.env.SECRET,
+  saveUninitialized:false,
+  resave:false,
+  store: new MongoStore({ mongooseConnection: mongoose.connection })
+}));
 //Configure passport middleware
 app.use(passport.initialize());
 app.use(passport.session());
