@@ -27,7 +27,7 @@ exports.signUpPost = [
   check('confirm_password')
   .custom((value, { req }) => value === req.body.password)
   .withMessage('Passwords do not match'),
-  
+
   sanitize('*').trim().escape(),
 
   (req, res, next) => {
@@ -39,11 +39,14 @@ exports.signUpGet = (req, res) => {
 
 if (!errors.isEmpty()) {
   //There are errors
+  //res.json(req.body)
   res.render('sign_up', {title: 'Please fix the following errors:', errors: errors.array(), user: req.body});
   return;
 } else {
   // No error
+
     const newUser = new User(req.body);
+    
     User.register(newUser, req.body.password, function(err) {
 
     if (err) {

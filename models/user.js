@@ -34,6 +34,7 @@ const userSchema = new mongoose.Schema({
 });
 
 userSchema.plugin(mongooseBcrypt);
+
 userSchema.plugin(passportLocalMongoose, { usernameField: 'email' });
 
 //Export model
