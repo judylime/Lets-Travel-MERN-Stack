@@ -1,8 +1,10 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 
-//require controllers:
-const hotelController = require ('../controllers/hotelController');
+// Require controllers:
+const hotelController = require('../controllers/hotelController');
+const userController = require('../controllers/userController');
+
 const hotel = require('../models/hotel');
 
 /* GET home page. */
@@ -17,30 +19,40 @@ router.get('/', hotelController.homePageFilters);
 //   }
 // })
 
+// HOTEL / COUNTRIES ROUTES
+// ============
+
 router.get('/all', hotelController.listAllHotels);
 router.get('/all/:hotel', hotelController.hotelDetail);
 router.get('/countries', hotelController.listAllCountries);
 router.get('/countries/:country', hotelController.hotelByCountry);
 router.post('/results', hotelController.searchresults);
 
-//Admit Routers:
-router.get('/admin', userController.isAdmin,hotelController.adminPage);
+// ADMIN ROUTES
+// ============
+router.get('/admin', userController.isAdmin, hotelController.adminPage);
 router.get('/admin/*', userController.isAdmin);
+
+router.get('/admin/orders', userController.allOrders)
 router.get('/admin/add', hotelController.createHotelGet);
 router.post('/admin/add', 
   hotelController.upload,
   hotelController.pushToCloudinary, 
   hotelController.createHotelPost);
+
 router.get('/admin/edit-remove',hotelController.editRemoveGet);
 router.post('/admin/edit-remove',hotelController.editRemovePost);
+
 router.get('/admin/:hotelId/update',hotelController.updateHotelGet);
 router.post('/admin/:hotelId/update',
   hotelController.upload,
   hotelController.pushToCloudinary, 
-  hotelController.updateHotelPost);
+  hotelController.updateHotelPost
+  );
+
 router.get('/admin/:hotelId/delete',hotelController.deleteHotelGet);
 router.post('/admin/:hotelId/delete',hotelController.deleteHotelPost);
-router.get('/admin/orders', userController.allOrders)
+
 // USER ROUTES
 // ============
 
@@ -53,11 +65,16 @@ router.get('/login', userController.loginGet);
 router.post('/login', userController.loginPost);
 
 router.get('/logout', userController.logout);
+
+router.get('/my-account', asyncErrorHandler(userController.myAccount));
+
+router.get('/order-placed/:data', 
+  userController.orderPlaced );
+
+  // Booking confirmation page
 router.get('/confirmation/:data', userController.bookingConfirmation);
 
-// router.get('/my-account', asyncErrorHandler(userController.myAccount));
 
-router.get('/order-placed/:data', userController.orderPlaced );
 
 
 

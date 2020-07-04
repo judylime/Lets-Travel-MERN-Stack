@@ -1,12 +1,14 @@
 require('dotenv').config();
-const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
-const cookieParser = require('cookie-parser');
+const createError = require('http-errors');
 const logger = require('morgan');
-const mongoose = require('mongoose');
+const cookieParser = require('cookie-parser');
 
+const mongoose = require('mongoose');
 const indexRouter = require('./routes/index');
+const helmet = require('helmet');
+const compression = require('compression')
 
 // For sessions
 const session = require('express-session');
@@ -15,29 +17,37 @@ const MongoStore = require('connect-mongo')(session);
 // For flash messages (also requires session from above)
 const flash = require('connect-flash');
 
-//For passport.js:
+// For passport.js:
 const User = require('./models/user');
 const passport = require('passport');
 
 const app = express();
+// app.use(helmet());
+// compress responses
+app.use(compression())
+
+app.use(helmet());
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
+// Session management
 app.use(session({
   secret: process.env.SECRET,
-  saveUninitialized:false,
-  resave:false,
+  saveUninitialized: false,
+  resave: false,
   store: new MongoStore({ mongooseConnection: mongoose.connection })
 }));
-//Configure passport middleware
+
+// Configure passport middleware
 app.use(passport.initialize());
 app.use(passport.session());
 
+// Passport.js
 passport.use(User.createStrategy());
 
-passport.serializeUser( User.serializeUser());
+passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 app.use( (req,res,next) => {
@@ -47,9 +57,11 @@ app.use( (req,res,next) => {
 
 // Flash messages
 app.use(flash());
-app.use( (req,res,next) => {
-  res.locals.user =req.user;
-  res.locals.url = req.path;
+
+// Make locals available in all templates
+app.use((req, res, next) =>{
+  res.locals.user = req.user;
+  res.locals.url = req.path,
   res.locals.flash = req.flash();
   next();
 });
@@ -57,7 +69,12 @@ app.use( (req,res,next) => {
 //Set up mongoose connection
 mongoose.connect(process.env.DB);
 mongoose.Promise = global.Promise;
-mongoose.connection.on('error', (error)=> console.error(error.message));
+mongoose.connection.on('error', (error) => console.error(error.message) );
+
+// uncomment after placing your favicon in /public
+// app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(logger('dev'));
 app.use(express.json());

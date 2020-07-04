@@ -1,19 +1,31 @@
 extends layout
+
 include mixins/_hotel
 include mixins/_country_list
+
 block content
 
   .outer_wrapper
     .hotel_wrapper
-      h2 Hotels
-        a(href="/all") (See All):
+      h2 Hotels  
+        a(href='/all') (see all):
       ul
         each hotel in filteredHotels
-          +hotel (hotel)
+          +hotel(hotel)
 
     .country_wrapper
       h2 Countries 
-        a(href="/countries") (see all):
+        a(href='/countries') (see all):
       ul
         each country in filteredCountries
-         +coutryList(country._id)
+          +countryList(country._id)
+
+
+            
+
+          
+
+        
+
+
+

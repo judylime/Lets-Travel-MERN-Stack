@@ -4,17 +4,17 @@ mixin hotel(hotel, searchQuery)
     .hotel_img
       a(href=`/all/${hotel._id}`)
         //- img(src=`/images/hotels/${hotel.image}`)    
-        img(src=`http://res.cloudinary.com/dkik8hgxa/image/upload/${hotel.image}.jpg`)
+        img(src=`https://res.cloudinary.com/dkik8hgxa/image/upload/${hotel.image}.jpg`)
     .hotel_info
       a(href=`/all/${hotel._id}`)
-        h3=hotel.hotel_name
+        h3= hotel.hotel_name
       hr
-      if url.startsWith('/all/')
-        p=hotel.hotel_description
+      if url.startsWith('/all/') || url.startsWith('/confirmation/')
+        p= hotel.hotel_description
         hr
       p= `Star rating: ${hotel.star_rating}`
       p= `Country: ${hotel.country}`
-      p= `Cost per night: $${hotel.cost_per_night}`
+      p= `Cost per night: $ ${hotel.cost_per_night}`
 
       if url.startsWith('/all/')
         hr
@@ -37,7 +37,6 @@ mixin hotel(hotel, searchQuery)
               .input_wrapper
                 button(type="submit") SEARCH!
 
-
     if url === '/results' || url.startsWith('/confirmation/')
       .hotel_order_details
         p= `Number of nights: ${searchQuery.duration}`
@@ -56,3 +55,6 @@ mixin hotel(hotel, searchQuery)
             a.button(href=`/order-placed/${query}`) Place your order!
           else 
             a.button(href=`/login`) Please log in to order!
+
+
+

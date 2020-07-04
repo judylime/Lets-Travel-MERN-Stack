@@ -3,13 +3,14 @@ const Hotel = require('../models/hotel');
 const Order = require('../models/order');
 const Passport = require('passport');
 //Express validator
-const {check, validationResult} =require ('express-validator/check');
-const {sanitize} = require('expresss-validator/filter');
+const { check, validationResult } = require('express-validator/check');
+const { sanitize } = require('express-validator/filter');
 const querystring = require('querystring');
 
 exports.signUpGet = (req, res) => {
-  res.render('sign_up', {title:'User sign up'});
+  res.render('sign_up', {title: 'User sign up'} );
 }
+
 exports.signUpPost = [
   //Validate data
   check('first_name').isLength({ min: 1 }).withMessage('First name must be specified.')
@@ -29,35 +30,30 @@ exports.signUpPost = [
   check('confirm_password')
   .custom((value, { req }) => value === req.body.password)
   .withMessage('Passwords do not match'),
-
   sanitize('*').trim().escape(),
 
   (req, res, next) => {
   const errors = validationResult(req);
 
-exports.signUpGet = (req, res) => {
-  res.render('sign_up', {title: 'User sign up'} );
-}
+// exports.signUpGet = (req, res) => {
+//   res.render('sign_up', {title: 'User sign up'} );
+// }
+  if (!errors.isEmpty()) {
+    //There are errors
+    //res.json(req.body)
+    res.render('sign_up', {title: 'Please fix the following errors:', errors: errors.array(), user: req.body});
+    return;
+  } else {// No error
+      const newUser = new User(req.body);
+      User.register(newUser, req.body.password, function(err) {
 
-if (!errors.isEmpty()) {
-  //There are errors
-  //res.json(req.body)
-  res.render('sign_up', {title: 'Please fix the following errors:', errors: errors.array(), user: req.body});
-  return;
-} else {
-  // No error
-
-    const newUser = new User(req.body);
-
-    User.register(newUser, req.body.password, function(err) {
-
-    if (err) {
-      console.log('error while user register!', err);
-      return next(err);
-    }
-    next();//Move onto loginPost after registering
-  });
-}
+      if (err) {
+        console.log('error while user register!', err);
+        return next(err);
+      }
+      next();//Move onto loginPost after registering
+    });
+  }
 }
 ];
 
@@ -67,19 +63,35 @@ exports.loginGet = (req, res) => {
 
 exports.loginPost = Passport.authenticate('local', {
   successRedirect: '/',
-
   successFlash: 'You are now logged in!',
-  failureRedirect: '/login',
-  
+  failureRedirect: '/login', 
   failureFlash: 'Login failed, please try again'
 });
 
 exports.logout = (req, res) => {
   req.logout();
-
   req.flash('info', 'You are now logged out');
   res.redirect('/');
 };
+
+exports.myAccount = async (req, res, next) => {
+  try{
+    const orders = await Order.aggregate([
+      { $match: { user_id: req.user.id }},
+      { $lookup: {
+          from: 'hotels',
+          localField: 'hotel_id',
+          foreignField: '_id',
+          as: 'hotel_data'
+      }   
+    },
+  ]);
+    res.render('user_account', { title: 'My Account', orders});
+    res.json(orders);
+  }catch (error){
+    next(error)
+  }
+}
 
 exports.bookingConfirmation = async (req, res) => {
   try{
@@ -102,10 +114,7 @@ exports.orderPlaced = async (req, res,next) => {
     const order = new Order({
       user_id: req.user._id,
       hotel_id: parsedData.id,
-      order_details: { 
-        duration: parsedData.duration, 
-        dateOfDeparture: parsedData.dateOfDeparture, 
-        numberOfGuests: parsedData.numberOfGuests }
+      order_details: { duration: parsedData.duration, dateOfDeparture: parsedData.dateOfDeparture, numberOfGuests: parsedData.numberOfGuests }
     });
     await order.save();
     req.flash('info', 'Thank you, your order has been placed!');
@@ -115,24 +124,6 @@ exports.orderPlaced = async (req, res,next) => {
   }
 }
 
-exports.myAccount = async (req, res,next) => {
-  try{
-    const orders = await Order.aggregate([
-      { $match: { user_id: req.user.id }},
-      { $lookup: {
-          from: 'hotels',
-          localField: 'hotel_id',
-          foreignField: '_id',
-          as: 'hotel_data'
-      }   
-    },
-  ]);
-    res.render('user_account', { title: 'My Account', orders});
-    res.json(orders);
-  }catch (error){
-    next(error)
-  }
-}
 
 exports.allOrders = async (req, res,next) => {
   try{
@@ -146,8 +137,8 @@ exports.allOrders = async (req, res,next) => {
       }   
     },
   ]);
-    res.render('orders', { title: 'All orders', orders});
-    res.json(orders);
+    res.render('orders', { title: 'All Orders', orders});
+    // res.json(orders);
   }catch (error){
     next(error)
   }
