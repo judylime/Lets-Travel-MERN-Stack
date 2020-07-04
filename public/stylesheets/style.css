@@ -123,6 +123,7 @@ textarea {
   border-radius: 5px; 
 }
 
+
 .button_small {
   width: 100px;
   margin: 0.5em;
@@ -145,6 +146,7 @@ textarea {
   background: #eee;
   padding: 0.5em;
 }
+
 
 /* for flash messages */
 .message {
@@ -175,6 +177,7 @@ textarea {
   color: rgb(233, 66, 66); 
 }
  
+
 @media (min-width: 1000px) {
 
 
