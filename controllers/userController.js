@@ -115,6 +115,25 @@ exports.orderPlaced = async (req, res,next) => {
   }
 }
 
+exports.myAccount = async (req, res,next) => {
+  try{
+    const orders = await Order.aggregate([
+      { $match: { user_id: req.user.id }},
+      { $lookup: {
+          from: 'hotels',
+          localField: 'hotel_id',
+          foreignField: '_id',
+          as: 'hotel_data'
+      }   
+    },
+  ]);
+    res.render('user_account', { title: 'My Account', orders});
+    res.json(orders);
+  }catch (error){
+    next(error)
+  }
+}
+
 exports.isAdmin = (req, res, next) => {
   if(req.isAuthenticated() && req.user.isAdmin) {
     next(); 
