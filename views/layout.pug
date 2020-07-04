@@ -41,6 +41,15 @@ html
               option(value="-1") Price: High - Low
           .input_wrapper
           button(type="submit") SEARCH
-      img(src="/images/beach.jpg")
+      
+      - const values = Object.values(flash)
+      - const keys = Object.keys(flash)
+      if keys.length > 0
+          div(class=`message message_${keys}`)
+            span= values
+            span.close_btn(onclick="this.parentNode.remove()" ) &times;
+      
+      if url === '/'
+        img(src="/images/beach.jpg")
     block content
     //- p Below the content

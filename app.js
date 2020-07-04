@@ -12,6 +12,9 @@ const indexRouter = require('./routes/index');
 const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
 
+// For flash messages (also requires session from above)
+const flash = require('connect-flash');
+
 //For passport.js:
 const User = require('./models/user');
 const passport = require('passport');
@@ -41,6 +44,15 @@ app.use( (req,res,next) => {
   res.locals.url = req.path
   next();
 });
+
+// Flash messages
+app.use(flash());
+app.use( (req,res,next) => {
+  res.locals.url = req.path
+  res.locals.flash = req.flash(),
+  next();
+});
+
 //Set up mongoose connection
 mongoose.connect(process.env.DB);
 mongoose.Promise = global.Promise;
