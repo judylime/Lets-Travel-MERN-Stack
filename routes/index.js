@@ -24,7 +24,8 @@ router.get('/countries/:country', hotelController.hotelByCountry);
 router.post('/results', hotelController.searchresults);
 
 //Admit Routers:
-router.get('/admin', hotelController.adminPage);
+router.get('/admin', userController.isAdmin,hotelController.adminPage);
+router.get('/admin/*', userController.isAdmin);
 router.get('/admin/add', hotelController.createHotelGet);
 router.post('/admin/add', 
   hotelController.upload,
