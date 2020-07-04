@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
-const mongooseBcrypt = require('mongoose-bcrypt');
 const passportLocalMongoose = require('passport-local-mongoose');
+const mongooseBcrypt = require('mongoose-bcrypt');
 
 const userSchema = new mongoose.Schema({
   first_name: {
@@ -34,7 +34,6 @@ const userSchema = new mongoose.Schema({
 });
 
 userSchema.plugin(mongooseBcrypt);
-
 userSchema.plugin(passportLocalMongoose, { usernameField: 'email' });
 
 //Export model

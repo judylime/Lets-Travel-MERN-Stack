@@ -5,7 +5,7 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const mongoose = require('mongoose');
-const index = require('./routes/index');
+const indexRouter = require('./routes/index');
 
 //For passport.js:
 const User = require('./models/user');
