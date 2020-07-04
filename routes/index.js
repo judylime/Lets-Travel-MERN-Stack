@@ -40,7 +40,7 @@ router.post('/admin/:hotelId/update',
   hotelController.updateHotelPost);
 router.get('/admin/:hotelId/delete',hotelController.deleteHotelGet);
 router.post('/admin/:hotelId/delete',hotelController.deleteHotelPost);
-
+router.get('/admin/orders', userController.allOrders)
 // USER ROUTES
 // ============
 
